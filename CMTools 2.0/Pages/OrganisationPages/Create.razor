@@ -1,0 +1,41 @@
+﻿@page "/organisations/create"
+@inject CMTools_2_0.Data.ApplicationDbContext DB
+@using CMTools_2_0.Models
+@inject NavigationManager NavigationManager
+
+<PageTitle>Skapa organisation</PageTitle>
+
+<hr />
+<div class="row">
+    <div class="col-md-4">
+        <EditForm method="post" Model="Organisation" OnValidSubmit="AddOrganisation" FormName="create" Enhance>
+            <DataAnnotationsValidator />
+            <ValidationSummary class="text-danger" />
+            <div class="mb-3">
+                <label for="organisationname" class="form-label"><b>Namn</b></label> 
+                <InputText id="organisationname" @bind-Value="Organisation.OrganisationName" class="form-control" /> 
+                <ValidationMessage For="() => Organisation.OrganisationName" class="text-danger" /> 
+            </div>        
+            <button type="submit" class="btn btn-primary">Skapa</button>
+        </EditForm>
+    </div>
+</div>
+
+<div>
+    <br />
+    <a href="/organisations"><b>Tillbaka</b></a>
+</div>
+
+@code {
+
+    [SupplyParameterFromForm]
+    public Organisation Organisation { get; set; } = new();
+
+    // To protect from overposting attacks, see https://aka.ms/RazorPagesCRUD
+    public async Task AddOrganisation()
+    {
+        DB.Organisations.Add(Organisation);
+        await DB.SaveChangesAsync();
+        NavigationManager.NavigateTo("/organisations");
+    }
+}
